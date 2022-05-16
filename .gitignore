@@ -351,3 +351,6 @@ MigrationBackup/
 
 # Database Snapshot
 /FilmsCatalog/Migrations/ApplicationDbContextModelSnapshot.cs
+
+# Uploaded files directory
+/FilmsCatalog/wwwroot/Files/
