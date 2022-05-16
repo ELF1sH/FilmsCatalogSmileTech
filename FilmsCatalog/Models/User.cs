@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace FilmsCatalog.Models
 {
@@ -7,5 +8,7 @@ namespace FilmsCatalog.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
+
+        public ICollection<Movie> Movies { get; set; } 
     }
 }

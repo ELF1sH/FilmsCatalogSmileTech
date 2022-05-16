@@ -4,9 +4,9 @@ namespace FilmsCatalog.Models
 {
     public class SignUpViewModel
     {
-        // [Required(ErrorMessage = "Обязательное поле")]
+        [Required(ErrorMessage = "Обязательное поле")]
         [EmailAddress(ErrorMessage = "Необходимо указать корректный email")]
-        // [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "Email*")]
         public string Email { get; set; }
         

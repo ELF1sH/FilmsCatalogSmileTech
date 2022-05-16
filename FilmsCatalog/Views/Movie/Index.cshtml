@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Movie catalog";
+}
+@using PagedList.Mvc;
+@model PagedList.IPagedList<MovieGetShortViewModel>;
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <a asp-action="AddMovie" asp-controller="Movie" class="btn btn-success mb-4">Добавить новый фильм</a>
+}
+<h2>Каталог фильмов</h2>
+
+@foreach(var movie in Model)
+{
+    <div class="card mb-1">
+        <div class="card-body d-flex justify-content-between">
+            <div>
+                <h5>@movie.Title (@movie.Year)</h5>
+                <p class="mb-0">Режиссер: @movie.Director</p>
+            </div>
+            @if (movie.User.UserName == User.Identity.Name)
+            {
+                <div>
+                    <a class="btn btn-warning">Редактировать фильм</a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+Page @Model.PageNumber of @Model.PageCount
+
+ <ul class="pagination justify-content-center">
+    @if (Model.PageCount > 5)
+    {
+        <li class="page-item">
+            <a asp-action="Index" class="page-link" asp-route-page=1>1</a>
+        </li>
+    }
+    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+        <a asp-action="Index" class="page-link" asp-route-page=@(Model.PageNumber-1)>&laquo;</a>
+    </li>
+    @if (Model.PageNumber > 2)
+    {
+        <li class="page-item">
+            <a asp-action="Index" class="page-link" asp-route-page=@(Model.PageNumber-2)>@(Model.PageNumber-2)</a>
+        </li>
+    }
+    @if (Model.PageNumber > 1)
+    {
+        <li class="page-item">
+            <a asp-action="Index" class="page-link" asp-route-page=@(Model.PageNumber-1)>@(Model.PageNumber-1)</a>
+        </li>
+    }
+    <li class="page-item active">
+        <a asp-action="Index" class="page-link" asp-route-page=@Model.PageNumber>@Model.PageNumber</a>
+    </li>
+    @if (Model.PageNumber < Model.PageCount)
+    {
+        <li class="page-item">
+            <a asp-action="Index" class="page-link" asp-route-page=@(Model.PageNumber+1)>@(Model.PageNumber+1)</a>
+        </li>
+    }
+    @if (Model.PageNumber < Model.PageCount - 1)
+    {
+        <li class="page-item">
+            <a asp-action="Index" class="page-link" asp-route-page=@(Model.PageNumber+2)>@(Model.PageNumber+2)</a>
+        </li>
+    }
+    <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+        <a asp-action="Index" class="page-link" asp-route-page=@(Model.PageNumber+1)>&raquo;</a>
+    </li>
+    @if (Model.PageCount > 5)
+    {
+        <li class="page-item">
+            <a asp-action="Index" class="page-link" asp-route-page=@Model.PageCount>@Model.PageCount</a>
+        </li>
+    }
+</ul>

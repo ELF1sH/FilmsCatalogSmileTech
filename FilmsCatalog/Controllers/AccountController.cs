@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FilmsCatalog.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FilmsCatalog.Controllers
 {
@@ -51,7 +52,7 @@ namespace FilmsCatalog.Controllers
                 await _signInManager.SignInAsync(user, false);
                 _logger.LogInformation("User success signup!");
                 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Movie");
             }
 
             foreach (var error in created.Errors)
@@ -91,14 +92,14 @@ namespace FilmsCatalog.Controllers
                 return Redirect(model.ReturnUrl);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Movie");
         }
 
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Movie");
         }
     }
 }
