@@ -2,11 +2,12 @@
     ViewData["Title"] = "Movie catalog";
 }
 
-@model MovieCreateViewModel
+@model MovieEditViewModel
 
-<h2>Добавление фильма</h2>
+<h2>Редактирование фильма</h2>
 
-<form asp-controller="Movie" asp-action="AddMovie" method="post" style="margin-top: 2em;" enctype="multipart/form-data">
+<form asp-controller="Movie" asp-action="EditMovie" asp-route-returnAction="@ViewBag.ReturnAction" asp-route-page="@ViewBag.Page"
+        method="post" style="margin-top: 2em;" enctype="multipart/form-data">
     <div class="form-row">
         <div class="form-group col-sm-6 col-12">
             <label asp-for="Title"></label>
@@ -42,9 +43,11 @@
             <span asp-validation-for="Poster" class="text-danger"></span>
         </div>
     </div>
+
+    <input type="hidden" asp-for="OwnerUsername">
     
     <div class="form-group">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <button type="submit" class="btn btn-outline-primary">Добавить</button>
+        <button type="submit" class="btn btn-warning">Отредактировать</button>
     </div>
 </form>

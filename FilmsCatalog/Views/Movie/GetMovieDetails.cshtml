@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = @Model.Title;
+}
+
+@model MovieLongViewModel
+
+<div class="mb-3">
+    <a asp-action="Index" asp-controller="Movie" asp-route-page="@ViewBag.Page" class="btn btn-primary">Назад</a>
+    @if (User.Identity.Name == @Model.User.UserName)
+    {
+        <a asp-action="EditMovie" asp-controller="Movie" asp-route-id="@Model.Id" asp-route-page=@ViewBag.Page
+            class="btn btn-warning" asp-route-returnAction="GetMovieDetails">Редактировать</a>
+    }
+</div>
+
+<h2 class="mb-3">@Model.Title (@Model.Year)</h2>
+
+<div class="mb-3">
+    <img class="d-block" style="max-width: 70%" src= "~/@Model.PosterPath" alt="@Model.Title" />
+</div>
+
+<p>@Model.Description</p>
+
+<p><b>Режиссер:</b> @Model.Director</p>
+
+<p><b>Опубликовал:</b> @Model.User.FirstName @Model.User.LastName</p>

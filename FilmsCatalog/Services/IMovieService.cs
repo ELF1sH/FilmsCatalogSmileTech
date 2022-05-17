@@ -3,6 +3,7 @@ using FilmsCatalog.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,10 @@ namespace FilmsCatalog.Services
     public interface IMovieService
     {
         Task AddMovie(MovieCreateViewModel model, ClaimsPrincipal currentUserClaims);
-        List<MovieGetShortViewModel> GetAllMoviesShort();
+        List<MovieShortViewModel> GetAllMoviesShort();
+        Task<MovieEditViewModel> GetMovieToEdit(int id);
+        Task EditMovie(int id, MovieEditViewModel model);
+        Task<MovieLongViewModel> GetMovieLongViewModel(int id);
     }
 
     public class MovieService : IMovieService
@@ -65,15 +69,69 @@ namespace FilmsCatalog.Services
             return path;
         }
 
-        public List<MovieGetShortViewModel> GetAllMoviesShort()
+        public List<MovieShortViewModel> GetAllMoviesShort()
         {
-            return _context.Movies.Select(movie => new MovieGetShortViewModel
+            return _context.Movies.Select(movie => new MovieShortViewModel
             {
+                Id = movie.Id,
                 Title =movie.Title,
                 Director = movie.Director,
                 Year = movie.Year,
                 User = movie.User
             }).ToList();
+        }
+
+        public async Task<MovieEditViewModel> GetMovieToEdit(int id)
+        {
+            var movie = await GetMovie(id);
+            return new MovieEditViewModel
+            {
+                Title = movie.Title,
+                Description = movie.Description,
+                Year = movie.Year,
+                Director = movie.Director,
+                OwnerUsername = movie.User.UserName
+            };
+        }
+
+        public async Task EditMovie(int id, MovieEditViewModel model)
+        {
+            var movie = await GetMovie(id);
+            movie.Title = model.Title;
+            movie.Description = model.Description;
+            movie.Year = (int)model.Year;
+            movie.Director = model.Director;
+            if (model.Poster != null)
+            {
+                var path = await CreatePosterFile(model.Poster);
+                movie.PosterPath = path;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<MovieLongViewModel> GetMovieLongViewModel(int id)
+        {
+            var movie = await GetMovie(id);
+            return new MovieLongViewModel
+            {
+                Id = movie.Id,
+                Title = movie.Title,
+                Description = movie.Description,
+                Year = movie.Year,
+                Director = movie.Director,
+                PosterPath = movie.PosterPath,
+                User = movie.User
+            };
+        }
+
+        private async Task<Movie> GetMovie(int id)
+        {
+            var movie = await _context.Movies.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == id);
+            if (movie == null)
+            {
+                throw new KeyNotFoundException($"Movie with id {id} does not exist");
+            }
+            return movie;
         }
     }
 }

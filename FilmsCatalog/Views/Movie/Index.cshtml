@@ -2,7 +2,7 @@
     ViewData["Title"] = "Movie catalog";
 }
 @using PagedList.Mvc;
-@model PagedList.IPagedList<MovieGetShortViewModel>;
+@model PagedList.IPagedList<MovieShortViewModel>;
 
 
 @if (User.Identity.IsAuthenticated)
@@ -16,13 +16,15 @@
     <div class="card mb-1">
         <div class="card-body d-flex justify-content-between">
             <div>
-                <h5>@movie.Title (@movie.Year)</h5>
+                <h5>
+                    <a asp-action="GetMovieDetails" asp-controller="Movie" asp-route-id="@movie.Id" asp-route-page=@Model.PageNumber>@movie.Title (@movie.Year)</a>
+                </h5>
                 <p class="mb-0">Режиссер: @movie.Director</p>
             </div>
             @if (movie.User.UserName == User.Identity.Name)
             {
                 <div>
-                    <a class="btn btn-warning">Редактировать фильм</a>
+                    <a asp-action="EditMovie" asp-controller="Movie" asp-route-id="@movie.Id" asp-route-page=@Model.PageNumber class="btn btn-warning">Редактировать фильм</a>
                 </div>
             }
         </div>
